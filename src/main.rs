@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+use hexagon_cli::{init};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -28,6 +29,8 @@ enum Commands {
         #[arg(short, long)]
         list: bool,
     },
+
+    Init
 }
 
 fn main() {
@@ -66,8 +69,16 @@ fn main() {
                 println!("Not printing testing lists...");
             }
         }
-        None => {}
+        Some(Commands::Init) => {
+            println!("Initializing database");
+            match init() {
+                Ok(_) => println!("Database initialized"),
+                Err(e) => println!("Error initializing database: {}", e)   
+            }
+        }
+        &None => todo!()
     }
 
     // Continued program logic goes here...
+    // sub commands can be handled here as well
 }
