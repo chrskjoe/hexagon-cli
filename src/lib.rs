@@ -18,35 +18,35 @@ pub fn init() -> Result<()> {
     db.execute(
         "CREATE TABLE IF NOT EXISTS task (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            status INTEGER DEFAULT 0 NOT NULL,
+            name TEXT NOT NULL
         )",
         // add status column
         [],
     )?;
 
     // create commit table
-    db.execute(
-        "CREATE TABLE IF NOT EXISTS commit (
-            id INTEGER PRIMARY KEY,
-            task_id INTEGER NOT NULL
-        )",
-        []
-    )?;
-    // create topic table
-    db.execute(
-        "CREATE TABLE IF NOT EXISTS topic (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            parent_id INTEGER
-        )",
-        []
-    )?;
+    // db.execute(
+    //     "CREATE TABLE IF NOT EXISTS commit (
+    //         id INTEGER PRIMARY KEY,
+    //         task_id INTEGER NOT NULL
+    //     )",
+    //     []
+    // )?;
+    // // create topic table
+    // db.execute(
+    //     "CREATE TABLE IF NOT EXISTS topic (
+    //         id INTEGER PRIMARY KEY,
+    //         name TEXT NOT NULL,
+    //         parent_id INTEGER
+    //     )",
+    //     []
+    // )?;
     // create project table
     return Ok(());
 }
 
 pub struct Task {
+    pub id: Option<i32>,
     pub name: String,
 }
 
