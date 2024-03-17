@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
-use hexagon_cli::{init};
+use clap::{Args, Parser, Subcommand, ValueEnum};
+use hexagon_cli::{create_task, init, Task};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -30,7 +30,28 @@ enum Commands {
         list: bool,
     },
 
-    Init
+    Init,
+    Create(CreateArgs)// task or project or topic
+}
+
+#[derive(Debug, Args)]
+struct CreateArgs {
+    #[command(subcommand)]
+    command: Option<CreateCommands>
+}
+
+#[derive(Debug, Subcommand)]
+enum CreateCommands {
+    Task {
+        #[arg(short, long)]
+        name: Option<String>
+    },
+    Project {
+        name: Option<String>
+    },
+    Topic {
+        name: Option<String>
+    }
 }
 
 fn main() {
@@ -74,6 +95,22 @@ fn main() {
             match init() {
                 Ok(_) => println!("Database initialized"),
                 Err(e) => println!("Error initializing database: {}", e)   
+            }
+        }
+        Some(Commands::Create(CreateArgs { command })) => {
+            match command {
+                Some(CreateCommands::Task { name }) => {
+                    println!("Creating task: {:?}", name);
+                    let name = name.as_ref().unwrap();
+                    let _ = create_task(&Task { name: name.to_string() });
+                }
+                Some(CreateCommands::Project { name }) => {
+                    println!("Creating project: {:?}", name);
+                }
+                Some(CreateCommands::Topic { name }) => {
+                    println!("Creating topic: {:?}", name);
+                }
+                None => println!("No subcommand provided")
             }
         }
         &None => todo!()
