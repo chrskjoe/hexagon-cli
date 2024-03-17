@@ -1,6 +1,5 @@
 use std::path::PathBuf;
-
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{Args, Parser, Subcommand};
 use hexagon_cli::{create_task, init, Task};
 
 #[derive(Parser)]
@@ -23,15 +22,9 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// does testing things
-    Test {
-        /// lists test values
-        #[arg(short, long)]
-        list: bool,
-    },
-
     Init,
-    Create(CreateArgs)// task or project or topic
+    Create(CreateArgs),// task or project or topic
+    // List(ListArgs),
 }
 
 #[derive(Debug, Args)]
@@ -54,11 +47,8 @@ enum CreateCommands {
     }
 }
 
+
 fn main() {
-
-    // connect to database
-
-
     // parse command line arguments
     let cli = Cli::parse();
 
@@ -83,13 +73,6 @@ fn main() {
     // You can check for the existence of subcommands, and if found use their
     // matches just as you would the top level cmd
     match &cli.command {
-        Some(Commands::Test { list }) => {
-            if *list {
-                println!("Printing testing lists...");
-            } else {
-                println!("Not printing testing lists...");
-            }
-        }
         Some(Commands::Init) => {
             println!("Initializing database");
             match init() {
