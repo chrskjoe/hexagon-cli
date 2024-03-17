@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use clap::{Args, Parser, Subcommand};
-use hexagon_cli::{create_task, init, Task};
+use hexagon::{create_task, init, Task};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -24,7 +24,7 @@ struct Cli {
 enum Commands {
     Init,
     Create(CreateArgs),// task or project or topic
-    // List(ListArgs),
+    List(ListArgs),
 }
 
 #[derive(Debug, Args)]
@@ -47,6 +47,20 @@ enum CreateCommands {
     }
 }
 
+#[derive(Debug, Args)]
+struct ListArgs {
+    #[arg(short, long)]
+    all: bool,
+    #[command(subcommand)]
+    command: Option<ListCommands>
+}
+
+#[derive(Debug, Subcommand)]
+enum ListCommands {
+    Task,
+    Project,
+    Topic   
+}
 
 fn main() {
     // parse command line arguments
@@ -85,13 +99,31 @@ fn main() {
                 Some(CreateCommands::Task { name }) => {
                     println!("Creating task: {:?}", name);
                     let name = name.as_ref().unwrap();
-                    let _ = create_task(&Task { name: name.to_string() });
+                    let _ = create_task(&Task { name: name.to_string(), id: None });
                 }
                 Some(CreateCommands::Project { name }) => {
                     println!("Creating project: {:?}", name);
                 }
                 Some(CreateCommands::Topic { name }) => {
                     println!("Creating topic: {:?}", name);
+                }
+                None => println!("No subcommand provided")
+            }
+        }
+        Some(Commands::List(ListArgs { all, command })) => {
+            match command {
+                Some(ListCommands::Task) => {
+                    println!("Listing tasks");
+                    let tasks = hexagon::retrive_task().unwrap();
+                    for task in tasks {
+                        println!("Task {:?} : {:?}",task.id, task.name);
+                    }
+                }
+                Some(ListCommands::Project) => {
+                    println!("Listing projects");
+                }
+                Some(ListCommands::Topic) => {
+                    println!("Listing topics");
                 }
                 None => println!("No subcommand provided")
             }
