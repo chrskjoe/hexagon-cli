@@ -58,3 +58,19 @@ pub fn create_task(task: &Task) -> Result<()> {
     )?;
     return Ok(());
 }
+
+pub fn retrive_task() -> Result<Vec<Task>> {
+    let db = connect()?;
+    let mut stmt = db.prepare("SELECT id, name FROM task")?;
+    let task_iter = stmt.query_map([], |row| {
+        Ok(Task {
+            id: row.get(0)?,
+            name: row.get(1)?,
+        })
+    })?;
+    let mut res = Vec::new();
+    for task in task_iter {
+        res.push(task.unwrap());
+    }
+    return Ok(res);
+}
