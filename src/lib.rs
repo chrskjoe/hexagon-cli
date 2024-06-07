@@ -5,6 +5,8 @@ pub fn connect() -> Result<Connection> {
     println!("Connecting to database...");
     let p = path::Path::new("hexagon.sqlite3");
     let db = Connection::open(p)?;
+let path = db.path(); 
+    println!("Connected to database: {:?}", path.unwrap());
     return Ok(db);
 }
 
