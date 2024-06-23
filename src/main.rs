@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use clap::{Args, Parser, Subcommand};
-use hexagon::{create_task, init, Task};
+use hexagon::{create_task, init, Task, create_topic};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -43,7 +43,8 @@ enum CreateCommands {
         name: Option<String>
     },
     Topic {
-        name: Option<String>
+        name: Option<String>,
+        parent_id: Option<i32>
     }
 }
 
@@ -104,8 +105,11 @@ fn main() {
                 Some(CreateCommands::Project { name }) => {
                     println!("Creating project: {:?}", name);
                 }
-                Some(CreateCommands::Topic { name }) => {
+                Some(CreateCommands::Topic { name, parent_id }) => {
                     println!("Creating topic: {:?}", name);
+                    let name = name.as_ref().unwrap();
+                    let parent_id = parent_id.as_ref();
+                    let _ = create_topic(name.to_string(), parent_id.copied());
                 }
                 None => println!("No subcommand provided")
             }
@@ -124,6 +128,30 @@ fn main() {
                 }
                 Some(ListCommands::Topic) => {
                     println!("Listing topics");
+                    let topics = hexagon::retrive_topics().unwrap(); 
+                    for topic in topics {
+                        println!("Topic {:?} : {:?} : {:?}",topic.id, topic.name, topic.parent_id);
+                    }
+                }
+                None => println!("No subcommand provided")
+            }
+        }
+        Some(Commands::Timing(TimingArgs { command})) => {
+            match command {
+                Some(TimingCommands::Status) => {
+
+                }
+                Some(TimingCommands::Start) => {
+
+                }
+                Some(TimingCommands::Pause) => {
+
+                } 
+                Some(TimingCommands::End) => {
+
+                } 
+                Some(TimingCommands::Commit) => {
+
                 }
                 None => println!("No subcommand provided")
             }
