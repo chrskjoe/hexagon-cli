@@ -23,27 +23,29 @@ The cli for hexagon, a task and time mangement tool
     hexagon create topic 
         --name "topic name"
         --description "topic description"
+        --parent_task "parent_task_name/id"
+        --
 
     hexagon create commit 
         --task "task id" or --project "project id" or --topic "topic id"
         --description "commit message"
         --duratoin "1h 30m" (optional)
         --start-from "2021-12-31 23:59" (optional)
-    */
 
-    /*
-        hexagon set task
-            --task "task id" or --project "project id" or --topic "topic id"
-            --date "2021-12-31 23:59"
-    */
+    hexagon set task
+        --task "task id" or --project "project id" or --topic "topic id"
+        --date "2021-12-31 23:59"
 ```
 
 ## Finsihed 
 
 - hexagon init
 - hexagon create 
-    - hexagon create task -n "task name" 
+    - hexagon create task -n "task name"  
+        - [ ] hexagon create task -n "task_name" -p "parent_task"
     - hexagon create topic "topic" 
+        - hexagon create topic "topic" "parent_id" 
+
 - hexagon list 
     - hexagon list task
     - 
