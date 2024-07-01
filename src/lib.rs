@@ -102,12 +102,12 @@ pub fn create_topic(name: String, parent_id: Option<i32>) -> Result<()> {
     match parent_id {
         Some(parent_id) => {
             // check if parent_id exists
-            // let parent_topic = db.query_row( 
-            //     "SELECT * FROM topic WHERE id = ?1",
-            //     [parent_id],
-            //     |row| { Ok(Topic { id: row.get(0)?, name: row.get(1)?, parent_id: row.get(2)? })} 
-            // )?;            
-            // println!("Parent topic: {:?}", parent_topic.name);
+            let parent_topic = db.query_row( 
+            "SELECT * FROM topic WHERE id = ?1",
+            [parent_id],
+            |row| { Ok(Topic { id: row.get(0)?, name: row.get(1)?, parent_id: row.get(2)? })} 
+            )?;            
+            println!("Parent topic: {:?}", parent_topic.name);
 
             let mut stmt = db.prepare("SELECT EXISTS(SELECT 1 FROM topic WHERE id = ?1 LIMIT 1)")?;
             let exists: bool = stmt.query_row([parent_id], |row| row.get(0))?;
